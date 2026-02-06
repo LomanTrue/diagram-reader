@@ -2,10 +2,6 @@ FROM python:3.10-slim-bullseye AS build
 
 WORKDIR /app
 
-RUN python --version && which python
-
-RUN pip install --upgrade pip
-
 RUN apt-get update && apt-get install -y \
         build-essential \
         libglib2.0-0 \
@@ -17,21 +13,15 @@ RUN apt-get update && apt-get install -y \
         git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir --prefix=/install numpy
+RUN pip install --upgrade pip
 
-RUN pip install --no-cache-dir --prefix=/install \
-        torch torchvision \
-        --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir torch==2.1.0 torchvision==0.16.0 \
+    --index-url https://download.pytorch.org/whl/cpu
 
-RUN pip install --no-cache-dir --prefix=/install \
-    paddlepaddle==3.2.0 \
-    paddlex \
-    paddleocr==3.3.3 \
-    -f https://www.paddlepaddle.org.cn/whl/linux/cpu/avx/stable.html \
-    --timeout 120
+RUN pip install --no-cache-dir ultralytics --no-deps
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+RUN pip install --prefix=/install --no-cache-dir -r requirements.txt
 
 COPY app app
 COPY models models
@@ -41,6 +31,9 @@ FROM python:3.10-slim-bullseye
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
+        tesseract-ocr \
+        tesseract-ocr-eng \
+        tesseract-ocr-rus \
         libglib2.0-0 \
         libgl1 \
         libsm6 \

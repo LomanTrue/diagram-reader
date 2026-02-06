@@ -10,13 +10,13 @@ detector = DiagramDetector("models/detector.pt")
 def process_image(image_bytes: bytes):
     image_rgb, image_gray = preprocess(image_bytes)
     detections = detector.detect(image_rgb)
-    print(detections)
 
     text_boxes = [d["bbox"] for d in detections if d["class"] == 1]
     texts = recognize_text(image_rgb, text_boxes)
-    print(text_boxes)
 
-    graph = build_graph(detections, texts)
+    ocr_results = [{"bbox": bbox, "text": text} for bbox, text in zip(text_boxes, texts)]
+
+    graph = build_graph(detections, ocr_results)
     description = describe_algorithm(graph)
 
     return {

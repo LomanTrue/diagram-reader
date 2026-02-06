@@ -11,6 +11,11 @@ class Edge(BaseModel):
     source: str
     target: str
 
+class Step(BaseModel):
+    step_number: int
+    step: str
+    role: str
+
 class DiagramResponse(BaseModel):
     graph: dict
     description: str

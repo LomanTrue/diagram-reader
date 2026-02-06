@@ -1,7 +1,8 @@
+pytesseract
 fastapi
+typing-extensions
 uvicorn[standard]
 opencv-python-headless
 Pillow
 dataclasses-json
-ultralytics
 python-multipart
